@@ -1,0 +1,75 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using MovieRentalFrontend.Models;
+using Newtonsoft.Json;
+using System.Collections.Specialized;
+using System.Text;
+namespace MovieRentalFrontend.Controllers
+{
+    public class MoviesController : Controller
+    {
+        private readonly HttpClient _client;
+        private string baseUri = "https://localhost:7158/";
+
+        public MoviesController (HttpClient client)
+        {
+            _client = client;
+        }
+        public async Task<IActionResult> Index()
+        {
+            ViewData["Title"] = "Available movies";
+
+            var response = await _client.GetAsync($"{baseUri}api/Movie/GetMovies");
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var movieList = JsonConvert.DeserializeObject<List<Movie>>(json);
+
+            return View(movieList);
+        }
+
+        public IActionResult Create()
+        {
+            ViewData["Title"] = "New Movie";
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Movie movie)
+        {
+            var json = JsonConvert.SerializeObject(movie);
+
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync($"{baseUri}api/Movie/AddMovie", content);
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            var response = await _client.GetAsync($"{baseUri}api/Movie/SearchMovieId/{id}");
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var movie = JsonConvert.DeserializeObject<Movie>(json);
+
+            return View(movie);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Movie movie)
+        {
+            var json = JsonConvert.SerializeObject(movie);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            await _client.PutAsync($"{baseUri}api/Movie/UpdateMovie/{movie.Id}", content);
+            return RedirectToAction("Index");
+        }
+
+        //public async Task<IActionResult> SearchMovieTitle(string title)
+        //{
+        //    var response = await _client.GetAsync($"{baseUri}api/Movie/SearchMovieTitle/{title}");
+        //}
+    }
+}
