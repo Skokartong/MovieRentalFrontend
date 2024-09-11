@@ -67,6 +67,13 @@ namespace MovieRentalFrontend.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var response = await _client.DeleteAsync($"{baseUri}api/Movie/DeleteMovie/{id}");
+            return RedirectToAction("Index");
+        }
+
         //public async Task<IActionResult> SearchMovieTitle(string title)
         //{
         //    var response = await _client.GetAsync($"{baseUri}api/Movie/SearchMovieTitle/{title}");
