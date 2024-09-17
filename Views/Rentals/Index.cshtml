@@ -1,0 +1,24 @@
+﻿@model List<Rental>
+
+<h1>Active Rentals</h1>
+
+@foreach (var rental in Model)
+{
+    <div class="card" style="width:18rem">
+        <div class="card-body">
+            <h5 class="card-title">@rental.FK_MovieId</h5>
+            <p class="card-text">@rental.FK_UserId</p>
+            <p class="card-text">@rental.RentalDate</p>
+
+            <a asp-action="Edit" asp-route-id="@rental.Id" class="btn btn-primary">Edit</a>
+            <a asp-action="Return Movie" asp-route-id="@rental.Id" class="btn btn-outline-primary">Return Movie</a>
+
+            <form method="post" asp-action="Delete" style="display:inline" >
+                <input type="hidden" name="id" value="@rental.Id"/>
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+}
+
+<a asp-action="Create" asp-controller="Rentals" class="btn btn-primary">Rent Movie</a>

@@ -1,0 +1,20 @@
+﻿@model Rental
+
+<h2>Rent Movie</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label>Movie Id</label>
+        <input asp-for=FK_MovieId class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>User Id</label>
+        <input asp-for=FK_UserId class="form-control" />
+    </div>
+    <div class="form-group">
+        <label>Rental Date</label>
+        <input asp-for=RentalDate class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Make Rental</button>
+</form>
